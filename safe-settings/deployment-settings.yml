@@ -1,0 +1,15 @@
+restrictedRepos:
+  exclude:
+    - .github
+  include:
+    - roblox-*
+    - rbx-*
+    - blockwarfare-*
+
+configvalidators:
+  - plugin: collaborators
+    error: |
+      `Admin cannot be assigned to collaborators`
+    script: |
+      console.log(`baseConfig ${JSON.stringify(baseconfig)}`)
+      return baseconfig.permission != 'admin'

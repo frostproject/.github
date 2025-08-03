@@ -1,0 +1,42 @@
+name: Safe Settings Sync
+on:
+  schedule:
+    - cron: "0 */12 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  safeSettingsSync:
+    runs-on: ubuntu-latest
+    env:
+      SAFE_SETTINGS_VERSION: 2.1.13
+      SAFE_SETTINGS_CODE_DIR: ${{ github.workspace }}/.safe-settings-code
+    steps:
+      - name: Checkout Config Repository
+        uses: actions/checkout@v4
+
+      - name: Checkout Upstream
+        uses: actions/checkout@v4
+        with:
+          repository: github/safe-settings
+          ref: ${{ env.SAFE_SETTINGS_VERSION }}
+          path: ${{ env.SAFE_SETTINGS_CODE_DIR }}
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+
+      - name: Install Dependencies
+        run: npm install
+        working-directory: ${{ env.SAFE_SETTINGS_CODE_DIR }}
+
+      - name: Sync Settings
+        run: npm run full-sync
+        working-directory: ${{ env.SAFE_SETTINGS_CODE_DIR }}
+        env:
+          GH_ORG: ${{ vars.SAFE_SETTINGS_GH_ORG }}
+          APP_ID: ${{ vars.SAFE_SETTINGS_APP_ID }}
+          PRIVATE_KEY: ${{ secrets.SAFE_SETTINGS_PRIVATE_KEY }}
+          GITHUB_CLIENT_ID: ${{ vars.SAFE_SETTINGS_GITHUB_CLIENT_ID }}
+          GITHUB_CLIENT_SECRET: ${{ secrets.SAFE_SETTINGS_GITHUB_CLIENT_SECRET }}
+          ADMIN_REPO: .github
+          CONFIG_PATH: safe-settings
+          DEPLOYMENT_CONFIG_FILE: ${{ github.workspace }}/safe-settings/deployment-settings.yml
