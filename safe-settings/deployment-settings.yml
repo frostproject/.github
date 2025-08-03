@@ -1,10 +1,6 @@
 restrictedRepos:
   exclude:
     - .github
-  include:
-    - roblox-*
-    - rbx-*
-    - blockwarfare-*
 
 configvalidators:
   - plugin: collaborators
