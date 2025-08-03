@@ -5,7 +5,8 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  safeSettingsSync:
+  settings:
+    name: Safe Setings Sync
     runs-on: ubuntu-latest
     env:
       SAFE_SETTINGS_VERSION: 2.1.17
